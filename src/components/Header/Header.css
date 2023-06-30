@@ -1,0 +1,65 @@
+@import url(../../App.css);
+
+.headerLogoSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.headerLogoSection .logoPart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerLogoSection .logoPart img {
+  max-width: 145px;
+}
+
+/* ===
+HEADER SECTION
+=== */
+
+.headerSection .navbar {
+  padding: 1rem 1rem;
+  background-color: var(--bg-color-3) !important;
+  border-top: 3px solid #000;
+
+}
+
+.headerSection .navbar .navbar-brand img {
+  max-width: 80px;
+  
+}
+
+.headerSection .navbar .nav-link {
+  margin-left: 1rem;
+  text-transform: uppercase;
+  
+}
+
+.navbar-toggler {
+  border: 0;
+  
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active {
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 992px) {
+  .headerSection .navbar {
+    text-align: center;
+    
+  }
+
+  .headerSection .navbar .nav-link {
+    margin-left: 0;
+    margin-top: 1rem;
+    
+  }
+}

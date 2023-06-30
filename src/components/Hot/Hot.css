@@ -1,0 +1,71 @@
+@import url(../../App.css);
+
+.hotSection {
+  background-color: var(--bg-two);
+  padding: 3rem 0;
+}
+
+.hotSection .sectionTitle {
+  font-family: "Montserrat";
+  text-align: center;
+  margin-block: 50px;
+  color: white;
+  font-weight: 700;
+  font-size: 4rem;
+  /* -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black; */
+  text-shadow: 5px 5px #000;
+}
+
+.hotSection .carousel {
+  background-color: white;
+  border: 3px solid #000;
+  border-radius: 1rem;
+}
+
+.hotSection .carousel .cta {
+  margin-bottom: 1rem;
+  background-color: var(--bg-color-2);
+}
+
+.hotSection .carouselRow {
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 4rem;
+}
+
+.hotSection .content .number {
+  font-weight: 900;
+  font-size: 4rem;
+}
+
+.carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  background-color: var(--bg-color-1);
+  border-radius: 50%;
+}
+
+.carousel-control-prev-icon {
+  background-image: url(../../../public/img/arrowLift.png);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.carousel-control-next-icon {
+  background-image: url(../../../public/img/arrowRight.png);
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+  width: 5%;
+}
+
+@media (max-width: 992px) {
+  .hotSection .sectionTitle {
+    font-size: 2.2rem;
+  }
+}
