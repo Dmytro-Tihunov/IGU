@@ -8,11 +8,7 @@ const Button = ({ label }) => {
   }
   return (
     <div className={classes}>
-      <div className="overlap-group">
-        <div className="rectangle"></div>
-        <div className="div"></div>
-        <div className="VIDEO">{label}</div>
-      </div>
+      {label}
     </div>
   );
 };
