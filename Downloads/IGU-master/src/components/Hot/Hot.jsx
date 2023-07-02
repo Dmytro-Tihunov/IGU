@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Hot.css";
 import Button from "./Button";
 
-const categories = ["Writing", "Art", "Audio", "Video", "Coding", "Business", "Education", "Lifestyle", "Entertainment"];
+const categories = ["WRITING", "ART", "AUDIO", "VIDEO", "CODING", "BUSINESS", "EDUCATION", "LIFESTYLE", "ENTERTAINMENT"];
 
 function Hot() {
   return (

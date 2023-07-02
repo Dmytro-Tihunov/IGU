@@ -1,9 +1,9 @@
 .component {
     position:relative;
     padding: 10px 16px;
-    font-family: "Montserrat-Medium", Helvetica;
+    font-family: "Montserrat";
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 540;
     letter-spacing: 0;
     line-height: normal;
     text-align: center;
@@ -33,3 +33,4 @@
     right: 4px;
     bottom: 4px;
   }
+ 

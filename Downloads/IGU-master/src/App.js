@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Loginpage from "./pages/Login/Loginpage";
 import Singuppage from "./pages/Signup/Singuppage";
 import Error from "./pages/Error";
+import ProjectCard from './components/MainComp/ProjectCard';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Error />
           </Route>
         </Switch>
+
 
         {/* <Home /> */}
         {/* <Loginpage /> */}
