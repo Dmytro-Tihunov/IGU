@@ -1,0 +1,46 @@
+.component {
+    height: 88px;
+    width: 100px;
+    position:relative;
+  }
+  .component .overlap-group {
+    height: 55px;
+    width: 100px;
+    position: relative;
+  }
+  
+  .component .rectangle {
+    background-color: #da9ef2;
+    border: 3px solid #000000;
+    border-radius: 5px;
+    height: 51px;
+    left: 4px;
+    position: absolute;
+    top: 4px;
+    width: 105px;
+  }
+  
+  .component .div {
+    background-color: #f7cc6c;
+    border: 3px solid #000000;
+    border-radius: 5px;
+    height: 51px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 105px;
+  }
+  
+  .component .VIDEO {
+    color: #000000;
+    font-family: "Montserrat-Medium", Helvetica;
+    font-size: 20px;
+    font-weight: 700;
+    height: 29px;
+    left: 12px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 11px;
+  }
