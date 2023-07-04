@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { supabase } from "../../lib/api";
 
 function Header(props) {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  // Get all categories
+  async function getCategories() {
+    const { data: categories } = await supabase
+      .from("Tools")
+      .select("Category");
+    // Remove duplicates
+    const uniqueCategories = [
+      ...new Set(categories.map((item) => item.Category)),
+    ];
+    setCategories(uniqueCategories);
+  }
+
   return (
     <section className="headerSection">
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -21,19 +40,11 @@ function Header(props) {
           >
             <Nav className="">
               <NavDropdown title="Categories" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">
-                  Categories
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
+                {categories.map((category) => (
+                  <NavDropdown.Item key={category} href="#action/3.1">
+                 { category}
+                  </NavDropdown.Item>
+                ))}
               </NavDropdown>
               <Link to="/login" className="nav-link">
                 {props.linkOne}

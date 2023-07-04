@@ -42,6 +42,11 @@
   width: 40%;
 }
 
+.warning_message {
+  font-size: xx-large;
+  text-align: center;
+}
+
 @media (max-width: 992px) {
   .ctegoriesSection {
     padding: 0;

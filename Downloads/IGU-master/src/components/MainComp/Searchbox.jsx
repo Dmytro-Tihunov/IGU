@@ -3,16 +3,16 @@ import "./Main.css";
 
 function Searchbox(props) {
   return (
-    <form action="">
       <div className="searchBox">
-        <i class="fa-solid fa-magnifying-glass"></i>
+        <i className="fa-solid fa-magnifying-glass"></i>
         <input
           type="text"
+          onChange={props.handleChange}
           className="form-control"
+          value={props.search}
           placeholder={props.placeholder}
         />
       </div>
-    </form>
   );
 }
 

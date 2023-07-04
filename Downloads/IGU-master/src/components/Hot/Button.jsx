@@ -1,17 +1,12 @@
 import React from "react";
 import "./Button.css";
 
-const Button = ({ label }) => {
-  let classes = "component";
-  if(label === "Education" || label === "Entertainment") {
-    classes += " wide-button";
-  }
+const Button = ({ label, handleClick, currentCat }) => {
   return (
-    <div className={classes}>
+    <div className={currentCat === label ? 'active component' : 'component'} onClick={() => handleClick(label)}>
       {label}
     </div>
   );
 };
-
 
 export default Button;

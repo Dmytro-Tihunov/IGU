@@ -10,6 +10,15 @@
     isolation: isolate;
   }
 
+  .component.active::after {
+    background-color:  #da9ef2;
+  }
+
+  .component.active::before {
+    background-color:  #f7cc6c;
+  }
+
+
   .component::before {
     content: '';
     z-index: -2 ;

@@ -1,7 +1,19 @@
 import React from "react";
 import "./Login.css";
+import { useState } from "react";
+import { supabase } from "../SupabaseClient";
+
+
 
 function Loginpage() {
+  
+const [session, setSession] = useState(null);
+
+// const {data, error} = await supabase.auth.signIn({
+//   email: 'user.email',
+//   password: 'user.password',
+// });
+
   return (
     <section class="loginSection">
       <div class="container">
