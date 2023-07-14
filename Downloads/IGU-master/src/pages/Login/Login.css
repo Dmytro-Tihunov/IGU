@@ -104,6 +104,16 @@ LOGIN SECREEN
   background-color: var(--bg-color-2);
 }
 
+.signupLink{
+color:#000;
+text-decoration: underline;
+}
+
+.forgotPass a{
+  color:#000;
+  font-size: 13px;
+}
+
 @media (max-width: 992px) {
   /* === LOGO SCREEN === */
 

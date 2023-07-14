@@ -1,52 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Carousel } from "react-bootstrap";
 import ContentLoader from "react-content-loader";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Hot.css";
 import Button from "./Button";
 import { supabase } from "../../lib/api";
+import useStore from "../../store";
 
 function Hot() {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [chosenCategory, setChosenCategory] = useState("All");
+  const { subcategories } = useStore();
+  const { tools } = useStore();
 
-  useEffect(() => {
-    getProjects();
-    getCategories();
-  }, []);
+  const Seasons = {
+    "Social Media": "Social",
+    "Business and Finance": "Business",
+    "Lifestyle and Health": "Lifestyle",
+    "Audio and Video": "Video",
+    "Education and Productivity": "Education",
+    Coding: "Coding",
+    "Lifestyle and Health": "Lifestyle",
+    "Art, Design and Graphics": "Design",
+    Entertainment: "Entertainment",
+    Writing: "Writing",
+    "Data Analysis and Management": "Data",
+    "Fashion and Shopping": "Fashion",
+  };
 
-  // Get all tools
-  async function getProjects() {
-    setIsLoading(true);
-    const { data, error } = await supabase.from("Tools").select();
-    if (error) {
-      console.log(error, "Fetch Supabase error");
-      setIsLoading(false);
-    } else {
-      setData(data);
-    }
-    setIsLoading(false);
-  }
-
-  // Get all categories
-  async function getCategories() {
-    const { data: categories } = await supabase
-      .from("Tools")
-      .select("Category");
-    // Remove duplicates
-    const uniqueCategories = [
-      ...new Set(categories.map((item) => item.Category)),
-    ];
-    setCategories(uniqueCategories);
-  }
+  const cleanUrl = (url) => {
+    return url.replace(/:\/\//g, ".");
+  };
 
   function handleClick(category) {
     setChosenCategory(category);
   }
 
-  const randomTools = data
+  const randomTools = tools
     .filter((item) => {
       if (chosenCategory === "All") {
         return true;
@@ -58,14 +48,9 @@ function Hot() {
     .slice(0, 3);
 
   const MyLoader = () => (
-    <ContentLoader 
-    speed={2}
-    width={1296}
-    height={473}
-    viewBox="0 0 1296 473"
-  >
-    <rect x="0" y="0" rx="0" ry="0" width="100%" height="473" /> 
-  </ContentLoader>
+    <ContentLoader speed={2} width={1296} height={473} viewBox="0 0 1296 473">
+      <rect x="0" y="0" rx="0" ry="0" width="100%" height="473" />
+    </ContentLoader>
   );
 
   return (
@@ -90,11 +75,14 @@ function Hot() {
                         </a>
                       </div>
                       <div className="col-12 col-lg-8">
-                        <img
-                          src="/img/corouselImage.png"
-                          alt="image1"
-                          className="img-fluid"
-                        />
+                        <div
+                          className="image"
+                          style={{
+                            backgroundImage: `url(https://wwcbzpqlwqiojdnspqoi.supabase.co/storage/v1/object/public/SS/${cleanUrl(
+                              tool.URL
+                            )}.png)`,
+                          }}
+                        ></div>
                       </div>
                       <div className="col-12 col-lg-4">
                         <div className="content">
@@ -111,12 +99,13 @@ function Hot() {
         </Row>
       </Container>
       <div className="category-button">
-        {categories.map((category) => (
+        {subcategories.map((category) => (
           <Button
             handleClick={handleClick}
-            key={category}
+            key={category.name}
+            type={category.name}
             currentCat={chosenCategory}
-            label={category}
+            label={Seasons[category.name]}
           />
         ))}
       </div>

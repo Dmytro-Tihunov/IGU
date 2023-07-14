@@ -2,23 +2,36 @@ import React, {
   useState,
   useEffect,
   forwardRef,
+  useRef,
   useImperativeHandle,
 } from "react";
 import { Container, Col, Row, Dropdown } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Searchbox from "../MainComp/Searchbox";
 import ProjectCard from "../MainComp/ProjectCard";
+import MenuItems from "../Common/MenuItems";
+import { useClickAway } from "react-use";
+import useFavorites from "../../hooks/useFavorites";
+import useStore from "../../store";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./Categories.css";
-import { supabase } from "../../lib/api";
+import "../Common/Menu.css";
 
 const Categories = forwardRef((props, ref) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+
   const [limit, setLimit] = useState(20);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [chosenCategory, setChosenCategory] = useState("All");
+  const [isReversed, setIsReversed] = useState(false);
   const [sortBy, setSortBy] = useState("None");
+  const [showFavorites, setShowFavorites] = useState(false);
+  const dropDownRefCatMenu = useRef(null);
+  const [favorites, addFavorite, removeFavorite] = useFavorites();
+  const { tools, subcategories } = useStore();
+
+  useClickAway(dropDownRefCatMenu, () => {
+    setShowDropdown(false);
+  });
 
   useImperativeHandle(ref, () => ({
     formHeroSearch(data) {
@@ -26,35 +39,42 @@ const Categories = forwardRef((props, ref) => {
     },
   }));
 
-  useEffect(() => {
-    setIsLoading(true);
-    getProjects();
-    getCategories();
-    setIsLoading(false);
-  }, []);
-
-  // Get all tools
-  async function getProjects() {
-    const { data, error } = await supabase.from("Tools").select();
-    if (error) {
-      console.log(error, "Fetch Supabase error");
+  const toggleFavorite = (id) => {
+    if (favorites.includes(id)) {
+      removeFavorite(id);
     } else {
-      setData(data);
+      addFavorite(id);
     }
-  }
+  };
 
   // Filter data
-  const filteredData = data
+  const filteredData = tools
     .filter((item) => {
-      return Object.keys(item).some((key) =>
-        item[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      if (isReversed) {
+        return Object.keys(item).some((key) =>
+          item[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else {
+        return Object.keys(item).some((key) =>
+          item[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
     })
     .filter((item) => {
       if (chosenCategory === "All") {
         return true;
       } else {
-        return item.Category === chosenCategory;
+        return (
+          item.Category === chosenCategory ||
+          item.Subcategory === chosenCategory
+        );
+      }
+    })
+    .filter((item) => {
+      if (showFavorites) {
+        return favorites.includes(item.ID);
+      } else {
+        return true;
       }
     })
     .sort((a, b) => {
@@ -65,30 +85,24 @@ const Categories = forwardRef((props, ref) => {
       }
     });
 
-  // Get all categories
-  async function getCategories() {
-    const { data: categories } = await supabase
-      .from("Tools")
-      .select("Category");
-    // Remove duplicates
-    const uniqueCategories = [
-      ...new Set(categories.map((item) => item.Category)),
-    ];
-    setCategories(uniqueCategories);
+  function onAddFavorite(id) {
+    toggleFavorite(id);
+  }
+
+  const listData = isReversed ? filteredData.reverse() : filteredData;
+
+  function onSortChange(name, type) {
+    setSortBy(name);
+    setIsReversed(type);
   }
 
   function onSearchTermChange(e) {
     setSearchTerm(e.target.value);
   }
 
-  function handleSearches(e) {
-    const { value } = e.target;
-    const lowercasedValue = value.toLowerCase();
-    const filteredData = data.filter((item) => {
-      return Object.keys(item).some((key) =>
-        item[key].toString().toLowerCase().includes(lowercasedValue)
-      );
-    });
+  function setCategory(category) {
+    setChosenCategory(category);
+    setShowDropdown(false);
   }
 
   const loadMoreProjects = () => {
@@ -107,28 +121,46 @@ const Categories = forwardRef((props, ref) => {
                 placeholder="Search by name"
               />
               <div className="dropdownButtons">
-                <Dropdown>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    {chosenCategory}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setChosenCategory("All")}>
-                      All
-                    </Dropdown.Item>
-                    {categories.map((el) => {
-                      return (
-                        <Dropdown.Item
-                          onClick={() => setChosenCategory(el)}
-                          value={el}
-                          key={el}
-                        >
-                          {el}
-                        </Dropdown.Item>
-                      );
-                    })}
-                  </Dropdown.Menu>
-                </Dropdown>
+                <nav className="menus-block">
+                  <div>
+                    Show favorites
+                    <div className="show-favorites">
+                      <input
+                        onClick={() => setShowFavorites((prev) => !prev)}
+                        defaultChecked={showFavorites}
+                        type="checkbox"
+                      />
+                      <span />
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowDropdown((prev) => !prev)}
+                    className="button-open-menu"
+                  >
+                    {chosenCategory} <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24"><path fill="currentColor" d="m7 10l5 5l5-5H7z"></path></svg>
+                  </button>
+                  {showDropdown && (
+                    <ul className="menus" ref={dropDownRefCatMenu}>
+                      <li
+                        className="menu-items"
+                        onClick={() => setChosenCategory("All")}
+                      >
+                        <button>All</button>
+                      </li>
+                      {subcategories.map((menu, index) => {
+                        const depthLevel = 0;
+                        return (
+                          <MenuItems
+                            callback={setCategory}
+                            items={menu}
+                            key={index}
+                            depthLevel={depthLevel}
+                          />
+                        );
+                      })}
+                    </ul>
+                  )}
+                </nav>
                 <Dropdown>
                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                     {sortBy === "None" ? "Sort by" : sortBy}
@@ -138,46 +170,38 @@ const Categories = forwardRef((props, ref) => {
                     <Dropdown.Item
                       onClick={(e) => setSortBy("Name")}
                       value="Name"
-                      href="#/action-1"
                     >
                       Name
                     </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => onSortChange("Newest", true)}
+                      value="Newest"
+                    >
+                      Newest
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => onSortChange("Oldest", false)}
+                      value="Oldest"
+                    >
+                      Oldest
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                {/* <Dropdown>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    Price
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">
-                      Another action
-                    </Dropdown.Item>
-                    <Dropdown.Item href="#/action-3">
-                      Something else
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown> */}
               </div>
-              {/* <a
-                onClick={handleSearch}
-                href="#link"
-                className="cta btn btn-primary"
-              >
-                Search
-              </a> */}
             </div>
           </Col>
         </Row>
         <Row className="mainRow">
           <Row className="mainRow">
             {filteredData.length > 0 ? (
-              filteredData.slice(0, limit).map((item) => {
+              listData.slice(0, limit).map((item) => {
                 return (
                   <ProjectCard
-                    key={item?.Name}
+                    handleChange={onAddFavorite}
+                    key={item?.ID}
                     title={item?.Name}
+                    favorites={favorites}
+                    id={item?.ID}
                     description={item?.Description}
                     subcategory={item?.subcategory}
                     url={item?.URL}

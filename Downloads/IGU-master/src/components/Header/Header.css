@@ -60,3 +60,43 @@ HEADER SECTION
     margin-top: 1rem;
   }
 }
+
+
+
+/* ===
+OFFCANVAS SECTION
+=== */
+.block-cat{
+margin-bottom: 30px;  
+}
+
+.block-title{
+  border-bottom: solid 1px gray;
+  margin-bottom: 15px;
+}
+
+.title-link-canvas {
+  color: #000 !important;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+}
+
+.sublink-canvas{
+  color: #000 !important;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  text-align: left;
+}
+
+.sublink-canvas:hover{
+ text-decoration: underline;
+}
+
+.offcanvas{
+min-height: 600px;
+}

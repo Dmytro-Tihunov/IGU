@@ -68,3 +68,8 @@ GLOBAL CLASS
   /* border-right: none; */
   border-radius: 0.3em;
 }
+
+.section-caterory-page{
+  margin-block: 100px;
+  padding: 0 4rem;
+}

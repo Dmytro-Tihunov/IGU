@@ -10,7 +10,7 @@ function Headerlogo() {
           <Col className="col-12">
             <div className="logoPart">
               <img
-                src="./img/headerLogo.png"
+                src="../img/headerLogo.png"
                 className="img-fluid"
                 alt="logo"
               />

@@ -1,64 +1,139 @@
 import React from "react";
+import { Spinner, Alert } from "react-bootstrap";
+import { useState, useRef, useEffect } from "react";
+import { supabase } from "../../lib/api";
 import "./Login.css";
-import { useState } from "react";
-import { supabase } from "../SupabaseClient";
-
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
 
 
 function Loginpage() {
-  
-const [session, setSession] = useState(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
+  const [show, setShow] = useState(true);
+  const navigate = useHistory();
+  const { auth } = useAuth();
+ 
+  useEffect(() => {
+    if (auth) {
+      navigate.push("/");
+    }
+  }, [auth]);
 
-// const {data, error} = await supabase.auth.signIn({
-//   email: 'user.email',
-//   password: 'user.password',
-// });
+  const closeAlert = () => {
+    setShow(false);
+    setError("");
+    setMsg("");
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!passwordRef.current?.value || !emailRef.current?.value) {
+      setError("Please fill in the fields");
+      return;
+    }
+    try {
+      setLoading(true);
+      setError("");
+      const {
+        data: { user, session },
+        error,
+      } = await supabase.auth.signInWithPassword({
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      });
+      if (error) setError(error.message);
+      if (user) {
+        setMsg("Login successful");
+        navigate.push("/");
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+    setLoading(false);
+  };
 
   return (
-    <section class="loginSection">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-lg-5">
-            <div class="loginWrapper">
-              <div class="heading">
-                <h3 class="logTitle">Welcome back👋</h3>
-                <p class="logText">Sign In to your Account</p>
+    <section className="loginSection">
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-lg-5">
+            <div className="loginWrapper">
+              <div className="heading">
+                <h3 className="logTitle">Welcome back👋</h3>
+                <p className="logText">Sign In to your Account</p>
               </div>
-              <form action="" class="input-group">
+
+              {error && (
+                <Alert
+                  variant="danger"
+                  onClose={() => closeAlert()}
+                  dismissible
+                >
+                  <Alert.Heading>Oh Error!</Alert.Heading>
+                  <p>{error}</p>
+                </Alert>
+              )}
+
+              <form onSubmit={handleLogin} action="" className="input-group">
                 <input
+                  ref={emailRef}
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Email address"
                 />
                 <input
+                  ref={passwordRef}
                   type="password"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Password"
                 />
-
-                <div class="loginBtn">
-                  <button class="cta" type="submit">
-                    Log in
+                <div className="forgotPass">
+                  <Link to="/reset-password">Forgot Password?</Link>
+                </div>
+                <div className="loginBtn">
+                  <button className="cta" type="submit">
+                    {loading ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        <span className="visually-hidden">Loading...</span>
+                      </>
+                    ) : (
+                      "Log in"
+                    )}
                   </button>
                 </div>
               </form>
-              <div class="connectBtns">
-                <a href="#link" class="abtn google">
+              <div className="connectBtns">
+                <a href="#link" className="abtn google">
                   <img
                     src="./img/google.webp"
-                    class="img-fluid"
+                    className="img-fluid"
                     alt="googlelogo"
                   />
                   Continue With Google
                 </a>
-                <a href="#link" class="abtn apple">
+                <a href="#link" className="abtn apple">
                   <img
                     src="./img/path4.png"
-                    class="img-fluid"
+                    className="img-fluid"
                     alt="applelogo"
                   />
                   Continue With Apple
                 </a>
+              </div>
+              <div>
+                Don't have an account? <Link to="/signup" className="signupLink">Sign up</Link>
               </div>
             </div>
           </div>

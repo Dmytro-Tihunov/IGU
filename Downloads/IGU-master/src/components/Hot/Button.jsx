@@ -1,9 +1,9 @@
 import React from "react";
 import "./Button.css";
 
-const Button = ({ label, handleClick, currentCat }) => {
+const Button = ({ label, type, handleClick, currentCat }) => {
   return (
-    <div className={currentCat === label ? 'active component' : 'component'} onClick={() => handleClick(label)}>
+    <div className={currentCat === type ? 'active component' : 'component'} onClick={() => handleClick(type)}>
       {label}
     </div>
   );

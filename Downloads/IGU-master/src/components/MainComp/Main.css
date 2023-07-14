@@ -41,6 +41,10 @@
   color: #747474;
 }
 
+.cateCard .cardImage span.show {
+  -webkit-text-fill-color: #000;
+}
+
 .cateCard .cardImage {
   display: flex;
   justify-content: center;
@@ -48,13 +52,24 @@
   position: relative;
   width: 100%;
   cursor: pointer;
+  border: 4px solid #000;
+  border-radius: 5px;
+  max-height: 210px;
+  overflow: hidden;
+  min-height: 210px;
+}
+
+.cateCard .cardImage .image{
+  background-position: top;
+  background-size: cover;
+  min-height: 210px;
+  width: 100%;
 }
 
 .cateCard .cardImage img {
   width: 100% !important;
   height: auto;
-  border: 4px solid #000;
-  border-radius: 5px;
+
 }
 
 .cateCard .cardImage span {
