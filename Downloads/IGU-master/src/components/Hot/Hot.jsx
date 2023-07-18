@@ -8,10 +8,13 @@ import { supabase } from "../../lib/api";
 import useStore from "../../store";
 
 function Hot() {
-  const [isLoading, setIsLoading] = useState(false);
   const [chosenCategory, setChosenCategory] = useState("All");
-  const { subcategories } = useStore();
-  const { tools } = useStore();
+  const {
+    tools,
+    isToolsLoading: isLoading,
+    subcategories,
+    isCategoriesLoading,
+  } = useStore();
 
   const Seasons = {
     "Social Media": "Social",
@@ -32,8 +35,16 @@ function Hot() {
     return url.replace(/:\/\//g, ".");
   };
 
-  function handleClick(category) {
-    setChosenCategory(category);
+  // function handleClick(category) {
+  //   setChosenCategory(category);
+  // }
+  
+  function toogleCategory(category) {
+    if (category === chosenCategory) {
+      setChosenCategory("All")
+    } else {
+      setChosenCategory(category)
+    }
   }
 
   const randomTools = tools
@@ -48,8 +59,14 @@ function Hot() {
     .slice(0, 3);
 
   const MyLoader = () => (
-    <ContentLoader speed={2} width={1296} height={473} viewBox="0 0 1296 473">
+    <ContentLoader backgroundColor="#5fb3b9" foregroundColor="#159098" speed={2} width={1296} height={473} viewBox="0 0 1296 473">
       <rect x="0" y="0" rx="0" ry="0" width="100%" height="473" />
+    </ContentLoader>
+  );
+
+  const MyButtonsLoader = () => (
+    <ContentLoader backgroundColor="#5fb3b9" foregroundColor="#159098" speed={2} width={170} height={48} viewBox="0 0 170 48">
+      <rect x="0" y="0" rx="5" ry="5" width="100%" height="48" />
     </ContentLoader>
   );
 
@@ -76,7 +93,7 @@ function Hot() {
                       </div>
                       <div className="col-12 col-lg-8">
                         <div
-                          className="image"
+                          className="image-hot"
                           style={{
                             backgroundImage: `url(https://wwcbzpqlwqiojdnspqoi.supabase.co/storage/v1/object/public/SS/${cleanUrl(
                               tool.URL
@@ -99,15 +116,21 @@ function Hot() {
         </Row>
       </Container>
       <div className="category-button">
-        {subcategories.map((category) => (
-          <Button
-            handleClick={handleClick}
-            key={category.name}
-            type={category.name}
-            currentCat={chosenCategory}
-            label={Seasons[category.name]}
-          />
-        ))}
+
+            {isCategoriesLoading
+              ? Array.from(Array(9).keys()).map((i) => (
+                  <MyButtonsLoader key={i} />
+                ))
+              : subcategories.map((category) => (
+                  <Button
+                    handleClick={toogleCategory}
+                    key={category.name}
+                    type={category.name}
+                    currentCat={chosenCategory}
+                    label={Seasons[category.name]}
+                  />
+                ))}
+    
       </div>
     </section>
   );

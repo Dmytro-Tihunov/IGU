@@ -9,15 +9,17 @@ import { Container, Col, Row, Dropdown } from "react-bootstrap";
 import Searchbox from "../MainComp/Searchbox";
 import ProjectCard from "../MainComp/ProjectCard";
 import MenuItems from "../Common/MenuItems";
+import Toogle from "../Common/ToogleSwitch";
 import { useClickAway } from "react-use";
 import useFavorites from "../../hooks/useFavorites";
 import useStore from "../../store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Categories.css";
 import "../Common/Menu.css";
+import { supabase } from "../../lib/api";
+import { useAuth } from "../../context/AuthProvider";
 
 const Categories = forwardRef((props, ref) => {
-
   const [limit, setLimit] = useState(20);
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -27,7 +29,8 @@ const Categories = forwardRef((props, ref) => {
   const [showFavorites, setShowFavorites] = useState(false);
   const dropDownRefCatMenu = useRef(null);
   const [favorites, addFavorite, removeFavorite] = useFavorites();
-  const { tools, subcategories } = useStore();
+  const { tools, subcategories, usersScores } = useStore();
+  const { user } = useAuth();
 
   useClickAway(dropDownRefCatMenu, () => {
     setShowDropdown(false);
@@ -38,6 +41,12 @@ const Categories = forwardRef((props, ref) => {
       setSearchTerm(data);
     },
   }));
+
+  function getAverageScore(arr) {
+    const sum = arr.reduce((a, b) => a + b.points, 0);
+    const avg = sum / arr.length || 0;
+    return avg.toFixed(2);
+  }
 
   const toggleFavorite = (id) => {
     if (favorites.includes(id)) {
@@ -89,6 +98,35 @@ const Categories = forwardRef((props, ref) => {
     toggleFavorite(id);
   }
 
+  async function onAddScore(id, score) {
+    const { data: scores } = await supabase
+      .from("Scores")
+      .select("*")
+      .eq("tool_id", id)
+      .eq("user_id", user.id);
+    if (scores.length > 0) {
+      await supabase
+        .from("Scores")
+        .update({ points: score })
+        .eq("tool_id", id)
+        .eq("user_id", user.id);
+    } else {
+      await supabase
+        .from("Scores")
+        .upsert({ tool_id: id, points: score, user_id: user.id })
+        .select();
+    }
+  }
+
+  function ifUserHasScore(id) {
+    const score = usersScores.find((score) => score.tool_id === id);
+    if (score) {
+      return score.points;
+    } else {
+      return 0;
+    }
+  }
+
   const listData = isReversed ? filteredData.reverse() : filteredData;
 
   function onSortChange(name, type) {
@@ -104,6 +142,10 @@ const Categories = forwardRef((props, ref) => {
     setChosenCategory(category);
     setShowDropdown(false);
   }
+
+  const logState = () => {
+    setShowFavorites((prev) => !prev)
+  };
 
   const loadMoreProjects = () => {
     setLimit((prevLimit) => prevLimit + 20);
@@ -125,19 +167,28 @@ const Categories = forwardRef((props, ref) => {
                   <div>
                     Show favorites
                     <div className="show-favorites">
-                      <input
+                      <Toogle onClick={logState} />
+                      {/* <input
                         onClick={() => setShowFavorites((prev) => !prev)}
                         defaultChecked={showFavorites}
                         type="checkbox"
-                      />
-                      <span />
+                      /> */}
+                 
                     </div>
                   </div>
                   <button
                     onClick={() => setShowDropdown((prev) => !prev)}
                     className="button-open-menu"
                   >
-                    {chosenCategory} <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24"><path fill="currentColor" d="m7 10l5 5l5-5H7z"></path></svg>
+                    {chosenCategory}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.1em"
+                      height="1.1em"
+                      viewBox="0 0 24 24"
+                    >
+                      <path fill="currentColor" d="m7 10l5 5l5-5H7z"></path>
+                    </svg>
                   </button>
                   {showDropdown && (
                     <ul className="menus" ref={dropDownRefCatMenu}>
@@ -198,12 +249,15 @@ const Categories = forwardRef((props, ref) => {
                 return (
                   <ProjectCard
                     handleChange={onAddFavorite}
+                    handleScore={onAddScore}
                     key={item?.ID}
                     title={item?.Name}
                     favorites={favorites}
                     id={item?.ID}
+                    score={getAverageScore(item?.Scores)}
+                    userScore={ifUserHasScore(item?.ID)}
                     description={item?.Description}
-                    subcategory={item?.subcategory}
+                    subcategory={item?.Subcategory}
                     url={item?.URL}
                   />
                 );

@@ -174,3 +174,18 @@
   text-align: center;
   font-size: 2rem;
 }
+
+.sub-and-score{
+  display: flex;
+  margin-bottom: 5px;
+  justify-content: space-between;
+}
+
+.score-stars{
+  margin-bottom: 15px;
+}
+
+.score-points{
+  display: flex;
+  align-items: center;
+}

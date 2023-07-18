@@ -39,13 +39,6 @@ function Header(props) {
           >
             <Nav className="">
               <button className="nav-link" onClick={() => setShow((prev) => !prev)}>Categories</button>
-              {/* <NavDropdown title="Categories" id="basic-nav-dropdown">
-                {categories.map((category, index) => (
-                  <NavDropdown.Item key={index}>
-                    {category.name}
-                  </NavDropdown.Item>
-                ))}
-              </NavDropdown> */}
               {!auth && (
                 <>
                   <Link to="/login" className="nav-link">

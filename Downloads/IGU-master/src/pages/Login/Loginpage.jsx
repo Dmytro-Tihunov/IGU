@@ -16,7 +16,7 @@ function Loginpage() {
   const [error, setError] = useState("");
   const [show, setShow] = useState(true);
   const navigate = useHistory();
-  const { auth } = useAuth();
+  const { auth, googleLogin } = useAuth();
  
   useEffect(() => {
     if (auth) {
@@ -53,6 +53,20 @@ function Loginpage() {
       }
     } catch (error) {
       setError(error.message);
+    }
+    setLoading(false);
+  };
+
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError("");
+      const { error } = await supabase.auth.signInWithOAuth({ provider: "google" });
+      if (error) setError(error.message);
+    } catch (error) {
+      setError(error.message);
+      console.log(error);
     }
     setLoading(false);
   };
@@ -115,14 +129,26 @@ function Loginpage() {
                 </div>
               </form>
               <div className="connectBtns">
-                <a href="#link" className="abtn google">
+                <button onClick={handleGoogleLogin} className="abtn google">
                   <img
                     src="./img/google.webp"
                     className="img-fluid"
                     alt="googlelogo"
                   />
-                  Continue With Google
-                </a>
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                      <span className="visually-hidden">Loading...</span>
+                      </>
+                      ): <>Continue With Google</>}
+                  
+                </button>
                 <a href="#link" className="abtn apple">
                   <img
                     src="./img/path4.png"

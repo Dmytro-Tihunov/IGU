@@ -3,9 +3,9 @@ import "./Button.css";
 
 const Button = ({ label, type, handleClick, currentCat }) => {
   return (
-    <div className={currentCat === type ? 'active component' : 'component'} onClick={() => handleClick(type)}>
+    <button className={currentCat === type ? 'active component' : 'component'} onClick={() => handleClick(type)}>
       {label}
-    </div>
+    </button>
   );
 };
 

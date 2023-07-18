@@ -12,13 +12,18 @@ import UpdatePassPage from "./pages/UpdatePassword/UpdatePassPage";
 import Error from "./pages/Error";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import useStore from "./store";
+import { useAuth } from "./context/AuthProvider";
 
 function App() {
-  const { getCategories, getTools } = useStore();
+  const { getCategories, getTools, getUsersScores } = useStore();
+  const { user } = useAuth();
 
   useEffect(() => {
     getTools()
     getCategories()
+    if (user){
+      getUsersScores(user.id)
+    }
   }, []); 
 
   return (

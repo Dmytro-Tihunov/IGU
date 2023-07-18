@@ -12,6 +12,10 @@ const login = (email, password) => {
   });
 };
 
+const googleLogin = () => {
+  supabase.auth.signInWithOAuth({ provider: "google" });
+};
+
 const passwordReset = (email) =>
   supabase.auth.resetPasswordForEmail(email, {
     redirectTo: "http://localhost:3000/update-password",
@@ -52,7 +56,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, user, login, passwordReset, updatePassword, signOut }}>
+    <AuthContext.Provider value={{ auth, user, login, googleLogin, passwordReset, updatePassword, signOut }}>
       {!loading && children}
     </AuthContext.Provider>
   );

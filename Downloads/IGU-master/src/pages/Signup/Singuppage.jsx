@@ -53,9 +53,24 @@ function Singuppage() {
         setMsg("Registration Successful");
         navigate.push("/");
       }
- 
     } catch (error) {
       setErrorMsg("Error in Creating Account");
+    }
+    setLoading(false);
+  };
+
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setErrorMsg("");
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
+      if (error) setErrorMsg(error.message);
+    } catch (error) {
+      setErrorMsg(error.message);
+      console.log(error);
     }
     setLoading(false);
   };
@@ -133,14 +148,29 @@ function Singuppage() {
                 </div>
               </form>
               <div className="connectBtns">
-                <a href="#link" className="abtn google">
-                  <img
-                    src="/img/google.webp"
-                    className="img-fluid"
-                    alt="googlelogo"
-                  />
-                  Continue With Google
-                </a>
+                <button onClick={handleGoogleLogin} className="abtn google">
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                      <span className="visually-hidden">Loading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src="/img/google.webp"
+                        className="img-fluid"
+                        alt="googlelogo"
+                      />
+                      Continue With Google
+                    </>
+                  )}
+                </button>
                 <a href="#link" className="abtn apple">
                   <img
                     src="/img/path4.png"

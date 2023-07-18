@@ -15,12 +15,18 @@ align-items: center;
 }
 
 .show-favorites{
-    position: relative;
+    /* position: relative;
     display: inline-block;
     margin-left: 10px;
-    margin-right: 20px;
+    margin-right: 20px; */
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    margin-right: 25px; 
+    margin-left: 5px;
 }
-/* 
+
 .show-favorites span {
   position: absolute;
   cursor: pointer;
@@ -35,7 +41,7 @@ align-items: center;
 }
 
 .show-favorites input:checked + span {
-  background-color: #00c853;
+  background-color: #DA9EF2;
 }
 
 .show-favorites input:checked + span:before {
@@ -58,7 +64,7 @@ align-items: center;
   opacity: 0;
   width: 0;
   height: 0;
-} */
+}
 
 .menus {
   /* display: flex;

@@ -8,7 +8,9 @@
     line-height: normal;
     text-transform: uppercase;
     text-align: center;
+    background: transparent;
     isolation: isolate;
+    border: 0
   }
 
   .component.active::after {

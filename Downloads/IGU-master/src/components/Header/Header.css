@@ -36,7 +36,10 @@ HEADER SECTION
   margin-left: 1rem;
   text-transform: uppercase;
   font-weight:700; color: #000;
+}
 
+.headerSection .navbar .nav-link:hover {
+  opacity: .7;
 }
 
 .navbar-toggler {

@@ -3,16 +3,20 @@ import { Container, Col, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { categoriesToTransform } from "../constants";
 import { useHistory } from "react-router-dom";
+import useStore from "../store";
 import { supabase } from "../lib/api";
 import useFavorites from "../hooks/useFavorites";
 import ProjectCard from "../components/MainComp/ProjectCard";
+import { useAuth } from "../context/AuthProvider";
 
 function CategoryPage() {
   const { slug } = useParams();
   const [tools, setTools] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [favorites, addFavorite, removeFavorite] = useFavorites();
+  const { usersScores } = useStore();
   const history = useHistory();
+  const { user } = useAuth();
 
   const categories = [
     "writing",
@@ -46,6 +50,42 @@ function CategoryPage() {
     toggleFavorite(id);
   }
 
+  async function onAddScore(id, score) {
+    const { data: scores } = await supabase
+      .from("Scores")
+      .select("*")
+      .eq("tool_id", id)
+      .eq("user_id", user.id);
+    if (scores.length > 0) {
+      await supabase
+        .from("Scores")
+        .update({ points: score })
+        .eq("tool_id", id)
+        .eq("user_id", user.id);
+    } else {
+      await supabase
+        .from("Scores")
+        .upsert({ tool_id: id, points: score, user_id: user.id })
+        .select();
+    }
+  }
+
+
+  function getAverageScore(arr) {
+    const sum = arr.reduce((a, b) => a + b.points, 0);
+    const avg = sum / arr.length || 0;
+    return avg.toFixed(2);
+  }
+
+  function ifUserHasScore(id) {
+    const score = usersScores.find((score) => score.tool_id === id);
+    if (score) {
+      return score.points;
+    } else {
+      return 0;
+    }
+  }
+
   useEffect(() => {
     const unlisten = history.listen(() => {
         getTools();
@@ -65,7 +105,7 @@ function CategoryPage() {
       setIsLoading(true);
       const { data, error } = await supabase
         .from("Tools")
-        .select()
+        .select(`*, Scores(*)`)
         .or(expression);
       if (error) {
         console.log(error, "Fetch Supabase error");
@@ -91,10 +131,13 @@ function CategoryPage() {
                       handleChange={onAddFavorite}
                       key={item?.ID}
                       title={item?.Name}
+                      handleScore={onAddScore}
                       favorites={favorites}
+                      userScore={ifUserHasScore(item?.ID)}
+                      score={getAverageScore(item?.Scores)}
                       id={item?.ID}
                       description={item?.Description}
-                      subcategory={item?.subcategory}
+                      subcategory={item?.Subcategory}
                       url={item?.URL}
                     />
                   );

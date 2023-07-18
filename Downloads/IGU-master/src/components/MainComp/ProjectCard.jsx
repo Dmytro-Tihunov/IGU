@@ -1,31 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col } from "react-bootstrap";
+import { useAuth } from "../../context/AuthProvider";
+import { Rating } from "react-simple-star-rating";
 
 function ProjectCard({
   id,
   title,
   description,
+  score,
   subcategory,
   favorites,
   handleChange,
+  userScore,
+  handleScore,
   url,
 }) {
   const [showFullDescription, setShowFullDescription] = useState(false);
-
+  const [rating, setRating] = useState(0);
   const shortDescription = description.slice(0, 40); // change 100 to whatever number of characters you want to display initially
+  const { auth } = useAuth();
 
   const addFavorite = (id) => {
     handleChange(id);
   };
 
   const cleanUrl = (url) => {
-    // const urlObj = new URL("/en-US/docs", url);
-    // return urlObj.host.replace(/^www\./, "");
-    return url.replace(/:\/\//g, ".")
-  }; 
+    return url.replace(/:\/\//g, ".");
+  };
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
+  };
+
+  const handleRating = (rate) => {
+    handleScore(id, rate)
   };
 
   return (
@@ -50,32 +58,44 @@ function ProjectCard({
         <div className="cardContent">
           <h5 className="cardTitle">{title}</h5>
           <p className="text">
-            {showFullDescription ? description : `${shortDescription}...`}
-            {description.length > 100 && (
-              <span
-                onClick={toggleDescription}
-                style={{ fontWeight: "bold", cursor: "pointer" }}
-              >
-                {showFullDescription ? " Show Less" : " Load More"}
-              </span>
+            {description.length > 100 ? (
+              <>
+                {showFullDescription ? description : `${shortDescription}...`}
+                <span
+                  onClick={toggleDescription}
+                  style={{ fontWeight: "bold", cursor: "pointer" }}
+                >
+                  {showFullDescription ? " Show Less" : " Load More"}
+                </span>
+              </>
+            ) : (
+              description
             )}
           </p>
-          <p className="tags">{subcategory}</p>
-          <div className="rate">
-            <div className="rating">
-              <input type="radio" name="rating" value="5" id="5" />
-              <label htmlFor="5">☆</label>
-              <input type="radio" name="rating" value="4" id="4" />
-              <label htmlFor="4">☆</label>
-              <input type="radio" name="rating" value="3" id="3" />
-              <label htmlFor="3">☆</label>
-              <input type="radio" name="rating" value="2" id="2" />
-              <label htmlFor="2">☆</label>
-              <input type="radio" name="rating" value="1" id="1" />
-              <label htmlFor="1">☆</label>
+
+          <div className="sub-and-score">
+            <div className="tags">{subcategory}</div>
+            <div className="score-points">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="m12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72l3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41l-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18l-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"
+                />
+              </svg>
+              {score}
             </div>
           </div>
 
+          {auth && (
+            <div className="score-stars">
+            <Rating initialValue={userScore} fillColor="#000000" onClick={handleRating} />
+            </div>
+          )}
           <div className="actionBtn">
             <a href={url} target="_blank" className="cta btn btn-primary">
               try now
