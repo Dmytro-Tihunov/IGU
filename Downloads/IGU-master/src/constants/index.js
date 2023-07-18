@@ -28,6 +28,7 @@ export const categoriesToTransform = {
   "customer-support": "Customer Support",
   "developer-tools": "Developer Tools",
   "life-assistant": "Life Assistant",
+  "human-resources": "Human Resources",
   "search-engine": "Search Engine",
   "education-assistant": "Education Assistant",
   healthcare: "Healthcare",

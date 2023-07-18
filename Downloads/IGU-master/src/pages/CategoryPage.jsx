@@ -7,6 +7,7 @@ import useStore from "../store";
 import { supabase } from "../lib/api";
 import useFavorites from "../hooks/useFavorites";
 import ProjectCard from "../components/MainComp/ProjectCard";
+import ContentLoader from "react-content-loader";
 import { useAuth } from "../context/AuthProvider";
 
 function CategoryPage() {
@@ -33,10 +34,9 @@ function CategoryPage() {
   const req = slug.includes("-")
     ? categoriesToTransform[slug]
     : slug.charAt(0).toUpperCase() + slug.slice(1);
-  const expression =
-   categories.includes(slug)
-      ? "Category.eq." + req
-      : "Subcategory.eq." + req;
+  const expression = categories.includes(slug)
+    ? "Category.eq." + req
+    : "Subcategory.eq." + req;
 
   const toggleFavorite = (id) => {
     if (favorites.includes(id)) {
@@ -70,7 +70,6 @@ function CategoryPage() {
     }
   }
 
-
   function getAverageScore(arr) {
     const sum = arr.reduce((a, b) => a + b.points, 0);
     const avg = sum / arr.length || 0;
@@ -88,13 +87,12 @@ function CategoryPage() {
 
   useEffect(() => {
     const unlisten = history.listen(() => {
-        getTools();
+      getTools();
     });
     return () => {
       unlisten();
     };
   }, [history]);
-
 
   useEffect(() => {
     getTools();
@@ -118,13 +116,32 @@ function CategoryPage() {
     setIsLoading(false);
   }
 
+  const MyLoader = () => (
+    <ContentLoader
+      speed={2}
+      viewBox="0 0 360 430"
+    >
+      <rect x="0" y="0" rx="10" ry="10" width="100%" height="190" />
+      <rect x="0" y="210" rx="10" ry="10" width="100%" height="20" />
+      <rect x="0" y="240" rx="5" ry="5" width="70%" height="10" />
+      <rect x="0" y="260" rx="5" ry="5" width="90%" height="10" />
+      <rect x="25%" y="300" rx="10" ry="10" width="50%" height="40" />
+    </ContentLoader>
+  );
+
   return (
     <section className="section-caterory-page">
       <Container fluid>
         <Row className="mainRow">
           <Col className="col-12">
             <Row className="mainRow">
-              {tools.length > 0 ? (
+              {isLoading ? (
+               Array.from(Array(8).keys()).map((i) => (
+                <Col className="col-12 col-lg-3 d-flex justify-content-center align-items-center">
+                <MyLoader key={i} />
+                </Col>
+              ))
+              ) : tools.length > 0 ? (
                 tools.map((item) => {
                   return (
                     <ProjectCard
