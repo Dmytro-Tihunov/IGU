@@ -59,18 +59,17 @@
   min-height: 210px;
 }
 
-.cateCard .cardImage .image{
+.cateCard .cardImage .image-tool{
   background-position: top;
   background-size: cover;
   min-height: 210px;
   width: 100%;
 }
 
-.cateCard .cardImage img {
+/* .cateCard .cardImage img {
   width: 100% !important;
   height: auto;
-
-}
+} */
 
 .cateCard .cardImage span {
   position: absolute;

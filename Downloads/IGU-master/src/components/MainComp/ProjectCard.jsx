@@ -47,7 +47,7 @@ function ProjectCard({
             <i className="fa fa-bookmark"></i>
           </span>
           <div
-            className="image"
+            className="image-tool"
             style={{
               backgroundImage: `url(https://wwcbzpqlwqiojdnspqoi.supabase.co/storage/v1/object/public/SS/${cleanUrl(
                 url
