@@ -10,23 +10,23 @@ function Review() {
       <Container>
         <Row>
           <Col className="col-12">
-            <h1 className="sectionTitle">REVIEWS 🕵🏼‍♀️</h1>
+            <h1 className="sectionTitle">ABOUT</h1>
           </Col>
         </Row>
         <Row className="cardRow">
           <Col className="col-12 col-lg-10">
             <Row>
               <ReviewCard
-                Title="BLA.AI"
-                Description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec mauris lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices "
+                Title="Contact Us"
+                Description="If you would like to reach out please drop a message at help@igu.ai"
               />
               <ReviewCard
-                Title="BLA.IO"
-                Description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec mauris lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices "
+                Title="Additional Features"
+                Description="We aim to add more features, we would love to hear your feedback"
               />
               <ReviewCard
-                Title="BLA.org"
-                Description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec mauris lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices "
+                Title="Be Seen"
+                Description="If you would like to be featured om IGU's HOT 3 section please feel free reach out"
               />
             </Row>
           </Col>

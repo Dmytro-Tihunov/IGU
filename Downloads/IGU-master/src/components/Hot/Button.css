@@ -13,15 +13,57 @@
   border: 0;
 }
 
+.component:hover::after {
+  cursor: pointer;
+  background-color: #da9ef2;
+  content: "";
+  z-index: -2;
+  border-radius: 4px;
+  border: 2px solid black;
+  position: absolute;
+  inset: 0px;
+  left: 4px;
+  top: 4px;
+}
+
+.component:hover::before {
+  background-color: #f7cc6c;
+  border-radius: 4px;
+  border: 2px solid black;
+  position: absolute;
+  inset: 0px;
+  content: "";
+  z-index: -1;
+  right: 4px;
+  bottom: 4px;
+}
+
+
 .component.active::after {
   background-color: #da9ef2;
+  content: "";
+  z-index: -2;
+  border-radius: 4px;
+  border: 2px solid black;
+  position: absolute;
+  inset: 0px;
+  left: 4px;
+  top: 4px;
 }
 
 .component.active::before {
   background-color: #f7cc6c;
+  border-radius: 4px;
+  border: 2px solid black;
+  position: absolute;
+  inset: 0px;
+  content: "";
+  z-index: -1;
+  right: 4px;
+  bottom: 4px;
 }
 
-.component::before {
+/* .component::before {
   content: "";
   z-index: -2;
   background-color: #da9ef2;
@@ -43,7 +85,7 @@
   inset: 0px;
   right: 4px;
   bottom: 4px;
-}
+} */
 
 @media (min-width: 1200px) {
   .component {

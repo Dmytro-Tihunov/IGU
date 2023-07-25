@@ -14,6 +14,15 @@ function Headerlogo() {
                 className="img-fluid"
                 alt="logo"
               />
+              <div className="explanations">
+                /ee: gu:/
+                <br />
+                <b>(informal)</b>
+                <br/>
+                1. Acryom: "I Got U,"
+                <br/>
+                a. Used to indicate taking care of the situation that one is in
+              </div>
             </div>
           </Col>
         </Row>

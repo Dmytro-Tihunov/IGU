@@ -7,6 +7,11 @@
   padding: 1rem 0;
 }
 
+.headerLogoSection .explanations{
+font-size: 12px;
+margin-left: 40px;
+}
+
 .headerLogoSection .logoPart {
   display: flex;
   justify-content: center;
@@ -17,9 +22,17 @@
   max-width: 120px;
 }
 
+
+@media (max-width: 992px) {
+  .headerLogoSection .explanations{
+  display: none;
+    }
+}
+
 /* ===
 HEADER SECTION
 === */
+
 
 .headerSection .navbar {
   padding: 1rem 2rem;
